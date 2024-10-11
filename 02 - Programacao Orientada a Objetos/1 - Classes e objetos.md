@@ -30,15 +30,7 @@ public class Extrato
 {
     public int ID { get; set; }
     public string NumeroConta { get; set; }
-    public string NomeTitular { get; set; }
-
-    // Construtor padrão
-    public Extrato(int id, string numeroConta, string nomeTitular)
-    {
-        ID = id;
-        NumeroConta = numeroConta;
-        NomeTitular = nomeTitular;
-    }
+    public string NomeTitular { get; set; }    
 
     // Método para exibir detalhes do extrato
     public void ExibirDetalhes()
@@ -59,7 +51,10 @@ class Program
     static void Main(string[] args)
     {
         // Instanciando um objeto da classe Extrato
-        Extrato extrato1 = new Extrato(1, "123456", "João da Silva");
+        Extrato extrato1 = new Extrato();
+        extrato1.ID = 1;
+        extrato1.NumeroConta = "123456";
+        extrato1.NomeTitular = "João da Silva";
         extrato1.ExibirDetalhes();
     }
 }
@@ -72,20 +67,6 @@ ID: 1, Conta: 123456, Titular: João da Silva
 ```
 
 ### Explicação Técnica
-
-#### Construtores
-Cada classe possui um **construtor**, que é um método especial chamado no momento em que um objeto é criado. O construtor inicializa os atributos da classe e garante que o objeto esteja em um estado válido desde o início.
-
-No exemplo acima, o construtor é usado para definir os valores iniciais das propriedades:
-
-```csharp
-public Extrato(int id, string numeroConta, string nomeTitular)
-{
-    ID = id;
-    NumeroConta = numeroConta;
-    NomeTitular = nomeTitular;
-}
-```
 
 #### Propriedades
 As **propriedades** (`ID`, `NumeroConta`, `Valor`, etc.) permitem encapsular os dados da classe, fornecendo uma maneira controlada de acessar e modificar esses valores. Usamos a convenção `get` e `set` para permitir a leitura e a modificação dessas propriedades:
@@ -108,7 +89,7 @@ public void ExibirDetalhes()
 Quando criamos um objeto, como:
 
 ```csharp
-Extrato extrato1 = new Extrato(1, "123456", "João da Silva");
+Extrato extrato1 = new Extrato();
 ```
 
 Estamos criando uma **instância** da classe `Extrato`, e o método construtor é automaticamente chamado para inicializar o objeto.
