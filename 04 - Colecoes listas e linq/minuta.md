@@ -1,6 +1,7 @@
 Arrays e Coleções: retomar List, Dictionary, HashSet, Queue, Stack + exercícios de fixação.
-LINQ: Introdução, métodos básicos (Select, Where, OrderBy, GroupBy) - introdução de conceitos.
 Lambda Expressions: introdução de conceitos + prática com exercícios.
+LINQ: Introdução, métodos básicos (Select, Where, OrderBy, GroupBy) - introdução de conceitos.
+
 
 ---
 Objetivos:

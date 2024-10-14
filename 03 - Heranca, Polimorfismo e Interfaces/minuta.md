@@ -2,7 +2,7 @@ Herança: Retomar conceito e aplicação + exercícios de fixação
 Polimorfismo: Retomar conceito de sobrescrita e sobrecarga de métodos + exercícios de fixação
 Classes Abstratas e Interfaces: Retomar conceito  + exercícios de fixação
 Interface Segregation e Dependency Inversion (SOLID): Introdução de conceito novo
-
+Tipos Genericos: classes e métodos genéricos + exercícios de fixação
 Objetivos:
 Finalizar recapitulação de POO e avançar com conhecimento mais profundo.
 Pessoal ter entendimento que o exercício de Storytelling seja algo continuo.
