@@ -2,6 +2,7 @@ Try, Catch, Finally
 Lançando Exceções: throw
 Exceções Personalizadas
 Ferramentas de Depuração no Visual Studio
+Nuget
 Uso de logs
 
 ---
