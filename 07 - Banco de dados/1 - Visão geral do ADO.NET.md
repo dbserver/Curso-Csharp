@@ -234,6 +234,152 @@ class Program
 }
 ```
 
-### Conclusão
 
-O ADO.NET
+## Estrutura do ADO.NET: Connection, Command, DataReader e DataSet
+
+ADO.NET é uma tecnologia de acesso a dados usada em aplicações .NET para se comunicar com bancos de dados e outros sistemas de armazenamento de dados. Ele fornece uma interface robusta para trabalhar com diferentes fontes de dados, seja uma base de dados relacional (como SQL Server, MySQL, Oracle) ou um arquivo XML.
+
+Nesta seção, exploraremos a estrutura básica do ADO.NET, focando nos principais componentes: `Connection`, `Command`, `DataReader` e `DataSet`.
+
+---
+
+### 1. **`Connection`: Conexão com o Banco de Dados**
+
+A `Connection` é o primeiro componente necessário para interagir com um banco de dados. Ela estabelece a conexão entre a aplicação e o sistema de gerenciamento de banco de dados (SGBD). O ADO.NET oferece classes específicas para diferentes bancos de dados, como `SqlConnection` para SQL Server e `OleDbConnection` para bases de dados mais antigas como Access.
+
+#### Principais Propriedades e Métodos:
+- **ConnectionString**: Define a string de conexão necessária para se conectar ao banco de dados (credenciais, nome do servidor, base de dados, etc.).
+- **Open()**: Abre a conexão com o banco.
+- **Close()**: Fecha a conexão quando o trabalho é concluído.
+
+#### Exemplo de Uso:
+
+```csharp
+using (SqlConnection connection = new SqlConnection("Data Source=servidor;Initial Catalog=baseDeDados;User ID=usuario;Password=senha"))
+{
+    connection.Open();  // Abrindo a conexão
+    // Aqui você pode executar comandos ou consultas
+    connection.Close(); // Fechando a conexão
+}
+```
+
+> **Nota**: Sempre que possível, utilize a instrução `using` para garantir que a conexão seja fechada e os recursos liberados adequadamente.
+
+---
+
+### 2. **`Command`: Execução de Comandos no Banco de Dados**
+
+Após estabelecer a conexão, o próximo passo é executar comandos SQL, como `INSERT`, `UPDATE`, `DELETE` ou `SELECT`. Para isso, utilizamos o objeto `Command`, que pode ser configurado para rodar uma instrução SQL no banco de dados.
+
+#### Principais Propriedades e Métodos:
+- **CommandText**: A instrução SQL a ser executada.
+- **CommandType**: Define se o comando é um texto SQL (comando direto) ou uma `Stored Procedure`.
+- **ExecuteNonQuery()**: Usado para comandos que não retornam dados (ex: `INSERT`, `UPDATE`, `DELETE`).
+- **ExecuteScalar()**: Usado para retornar um único valor (ex: `COUNT`, `MAX`, `AVG`).
+- **ExecuteReader()**: Usado para executar consultas que retornam múltiplas linhas (ex: `SELECT`).
+
+#### Exemplo de Uso:
+
+```csharp
+using (SqlConnection connection = new SqlConnection("Data Source=servidor;Initial Catalog=baseDeDados;User ID=usuario;Password=senha"))
+{
+    connection.Open();
+
+    string sqlInsert = "INSERT INTO Clientes (Nome, Idade) VALUES (@Nome, @Idade)";
+    SqlCommand command = new SqlCommand(sqlInsert, connection);
+
+    // Definindo os parâmetros
+
+    var nome = new SqlParameter("@Nome", System.Data.DbType.String);
+    nome.Value = "João";
+
+    command.Parameters.Add(nome);
+    command.Parameters.AddWithValue("@Idade", 30);
+
+    int linhasAfetadas = command.ExecuteNonQuery(); // Executa o comando e retorna o número de linhas afetadas
+    Console.WriteLine($"Linhas Afetadas: {linhasAfetadas}");
+
+    connection.Close();
+}
+```
+
+---
+
+### 3. **`DataReader`: Leitura de Dados de Forma Eficiente**
+
+O `DataReader` é utilizado para ler dados retornados por um comando `SELECT` de forma eficiente e rápida. Ele é um leitor "forward-only", ou seja, lê os dados linha a linha e só permite avançar para a próxima linha (não há como voltar).
+
+#### Principais Propriedades e Métodos:
+- **Read()**: Move o cursor para a próxima linha de dados.
+- **GetXXX()**: Métodos para obter o valor de uma coluna em um tipo específico (ex: `GetInt32()`, `GetString()`).
+- **Close()**: Fecha o `DataReader`.
+
+#### Exemplo de Uso:
+
+```csharp
+using (SqlConnection connection = new SqlConnection("Data Source=servidor;Initial Catalog=baseDeDados;User ID=usuario;Password=senha"))
+{
+    connection.Open();
+
+    string sqlSelect = "SELECT Nome, Idade FROM Clientes";
+    SqlCommand command = new SqlCommand(sqlSelect, connection);
+
+    using (SqlDataReader reader = command.ExecuteReader())
+    {
+        while (reader.Read()) // Lê cada linha do resultado
+        {
+            string nome = reader.GetString(0);  // Obtém a primeira coluna
+            int idade = reader.GetInt32(1);     // Obtém a segunda coluna
+            Console.WriteLine($"Nome: {nome}, Idade: {idade}");
+        }
+    }
+
+    connection.Close();
+}
+```
+
+> **Dica**: O `DataReader` é muito eficiente para leitura de grandes volumes de dados, mas como ele mantém a conexão aberta, é importante fechar o `DataReader` assim que terminar.
+
+---
+
+### 4. **`DataSet`: Estrutura de Dados Desconectada**
+
+Ao contrário do `DataReader`, o `DataSet` é uma estrutura de dados desconectada que pode conter múltiplas tabelas e relações entre elas. Ele permite que você manipule os dados localmente sem manter uma conexão aberta com o banco.
+
+O `DataSet` funciona bem para cenários onde você precisa modificar dados offline e depois sincronizá-los com o banco de dados.
+
+#### Principais Propriedades e Métodos:
+- **Tables**: Coleção de tabelas dentro do `DataSet`.
+- **Fill()**: Preenche o `DataSet` com dados de uma fonte.
+- **AcceptChanges()**: Aceita todas as alterações feitas nos dados.
+
+#### Exemplo de Uso:
+
+```csharp
+using (SqlConnection connection = new SqlConnection("Data Source=servidor;Initial Catalog=baseDeDados;User ID=usuario;Password=senha"))
+{
+    connection.Open();
+
+    string sqlSelect = "SELECT * FROM Clientes where Idade > 30";
+    SqlCommand command = new SqlCommand(sqlSelect, connection);
+    
+    SqlDataAdapter adapter = new SqlDataAdapter(command);
+    DataSet dataSet = new DataSet();
+    
+    adapter.Fill(dataSet);  // Preenche o DataSet com os dados da consulta
+
+    foreach (DataTable table in dataSet.Tables)
+    {
+        foreach (DataRow row in table.Rows)
+        {
+            Console.WriteLine($"{row["Nome"]}, {row["Idade"]}");
+        }
+    }
+
+    connection.Close();
+}
+```
+
+> **Nota**: O `DataSet` é ideal para cenários de aplicações mais complexas que envolvem manipulação de dados desconectada, como aplicações desktop.
+
+---
