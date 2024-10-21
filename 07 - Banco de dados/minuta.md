@@ -13,4 +13,4 @@ Apresentar conceitos de banco de dados no c#.
 Exercícios
 
 Sugestão de exercícios
-Continuação do Storytelling vinculado ao que estamos propondo - Criar um banco de dados em memória.
+Continuação do Storytelling vinculado ao que estamos propondo - Criar um banco de dados em memória.e s
